@@ -1,8 +1,8 @@
-package com.andy.andyzwanandroid;
+package com.andy.andyzwanandroid.activity;
 
 import android.os.Bundle;
 
-import com.andy.andyzwanandroid.databinding.ActivityMainBinding;
+import com.andy.andyzwanandroid.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,9 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity {
-
-    ActivityMainBinding binding;
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+    }
+
+    @Override
+    void initView() {
 
     }
 
