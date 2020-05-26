@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/circle_view"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/TextView1"
+        android:text="TextView1默认值"
+        android:gravity="center_vertical|left"
+        android:textColor="@android:color/black"
+        android:textSize="19sp"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/circle_view"
+        app:layout_constraintRight_toLeftOf="@+id/circle_view" />
+
+    <TextView
+        android:id="@+id/TextView2"
+        android:text="TextView2默认值"
+        android:gravity="center_vertical|left"
+        android:textSize="15sp"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/circle_view"
+        app:layout_constraintRight_toLeftOf="@+id/circle_view" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

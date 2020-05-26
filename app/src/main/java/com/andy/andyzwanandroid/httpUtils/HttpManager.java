@@ -1,3 +1,10 @@
+//
+//  HttpManager.swift
+//
+//  Created by 周朝亮 on 2020/5/14.
+//  Copyright © 2020 周朝亮. All rights reserved.
+//
+
 package com.andy.andyzwanandroid.httpUtils;
 
 
@@ -8,6 +15,8 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +64,8 @@ public class HttpManager {
 
     //get异步请求
     public void getHttpRequest(String url, HttpParams params, HttpCallBack callBack) {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
         if (params!=null){
             StringBuilder stringBuilder = new StringBuilder(url).append("?");
             for (Map.Entry<String, String> entry : params.getUrlParams().entrySet()){
@@ -67,12 +78,17 @@ public class HttpManager {
             url = stringBuilder.substring(0,stringBuilder.length()-1);
         }
         final Request request = new Request.Builder()
+                .header("Accept", "application/json")
                 .url(url)
                 .build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                //判断超时异常
+                if (e instanceof SocketTimeoutException) {
+                    callBack.onSocketTimeout();
+                }
                 handler.post(()->{
                     callBack.onFailure();
                     Log.e(HttpManager.class.toString(),e.toString());
@@ -80,10 +96,14 @@ public class HttpManager {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                handler.post(()->{
-                    callBack.onSuccess(response.body().toString());
-                });
+            public void onResponse(Call call, Response response) {
+                new Thread(()->{
+                    try {
+                        callBack.onSuccess(response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             }
         });
     }
@@ -108,6 +128,10 @@ public class HttpManager {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                //判断超时异常
+                if (e instanceof SocketTimeoutException) {
+                    callBack.onSocketTimeout();
+                }
                 handler.post(()->{
                     callBack.onFailure();
                     Log.e(HttpManager.class.toString(),e.toString());
@@ -115,10 +139,14 @@ public class HttpManager {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                handler.post(()->{
-                    callBack.onSuccess(response.body().toString());
-                });
+            public void onResponse(Call call, Response response) {
+                new Thread(()->{
+                    try {
+                        callBack.onSuccess(response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             }
         });
     }

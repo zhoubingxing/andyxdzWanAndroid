@@ -1,6 +1,7 @@
 package com.andy.andyzwanandroid.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.andy.andyzwanandroid.R;
 import com.andy.andyzwanandroid.databinding.FragmentHomeBinding;
+import com.andy.andyzwanandroid.httpUtils.HttpCallBack;
+import com.andy.andyzwanandroid.httpUtils.HttpManager;
+import com.andy.andyzwanandroid.httpUtils.HttpParams;
+import com.google.gson.Gson;
 
 import java.util.Objects;
+import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
 
@@ -48,6 +54,29 @@ public class HomeFragment extends Fragment {
 
         binding.textHome.setOnClickListener((v) -> {
             homeViewModel.setText("21312312");
+        });
+
+
+        HttpManager.getInstance(getActivity()).getHttpRequest("https://www.wanandroid.com/article/list/1/json", new HttpParams(), new HttpCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                try{
+                        HomeViewBean homeViewBean = new Gson().fromJson(response,HomeViewBean.class);
+                        Log.d("ss","ss");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+
+            @Override
+            public void onSocketTimeout() {
+
+            }
         });
         return binding.getRoot();
     }
