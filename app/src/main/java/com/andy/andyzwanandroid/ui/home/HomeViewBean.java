@@ -14,7 +14,7 @@ public class HomeViewBean implements Serializable {
         this.data = data;
     }
 
-    private class HomeData implements Serializable {
+    public class HomeData implements Serializable {
 
         //页码
         int curPage;
@@ -38,7 +38,7 @@ public class HomeViewBean implements Serializable {
         }
     }
 
-    private class HomeDatas implements Serializable {
+    public class HomeDatas implements Serializable {
 
         String apkLink;
         int audit;

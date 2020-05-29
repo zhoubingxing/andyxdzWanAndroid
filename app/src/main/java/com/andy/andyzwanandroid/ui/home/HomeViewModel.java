@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel;
 public class HomeViewModel extends ViewModel {
 
 
+    private HomeViewBean homeViewBean;
+
     private MutableLiveData<String> mText;
 
     public HomeViewModel() {
@@ -22,4 +24,11 @@ public class HomeViewModel extends ViewModel {
         this.mText.setValue(mText);
     }
 
+    public void setHomeViewBean(HomeViewBean homeViewBean) {
+        this.homeViewBean = homeViewBean;
+    }
+
+    public HomeViewBean getHomeViewBean() {
+        return homeViewBean;
+    }
 }
