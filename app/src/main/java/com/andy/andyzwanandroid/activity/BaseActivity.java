@@ -1,19 +1,28 @@
 package com.andy.andyzwanandroid.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import static com.andy.andyzwanandroid.Utils.StatusBarUtil.setTransparent;
+import com.andy.andyzwanandroid.R;
+import com.andy.andyzwanandroid.Utils.StatusBarUtil;
+
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTransparent(this);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StatusBarUtil.setLightStatusBar(this, true);//黑色文字
+            StatusBarUtil.setStatusBarColor(this, R.color.white);//白色背景
+        }else {
+            //6.0以下默认白色文字
+            StatusBarUtil.setStatusBarColor(this, R.color.black);//黑色背景
+        }
         initView();
         Log.d("Activity生命周期", this.getLocalClassName() + "---------> onCreate");
     }

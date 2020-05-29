@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.readystatesoftware.systembartint.SystemBarTintManager;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
  * Describe : 状态栏设置工具
  */
-public class StatusBarUtils {
+public class StatusBarUtil {
     @TargetApi(19)
     public static void transparencyBar(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -64,8 +66,9 @@ public class StatusBarUtils {
                     break;
 
                 case RomUtils.AvailableRomType.FLYME:
-                    setFlymeLightStatusBar(activity, dark);
-
+                    //魅族设置失效 运用通用Android设置生效 mark一下
+//                    setFlymeLightStatusBar(activity, dark);
+                    setAndroidNativeLightStatusBar(activity, dark);
                     break;
 
                 case RomUtils.AvailableRomType.ANDROID_NATIVE:
@@ -111,6 +114,7 @@ public class StatusBarUtils {
     }
 
     private static boolean setFlymeLightStatusBar(Activity activity, boolean dark) {
+
         boolean result = false;
         if (activity != null) {
             try {
@@ -135,6 +139,7 @@ public class StatusBarUtils {
             }
         }
         return result;
+
     }
 
     private static void setAndroidNativeLightStatusBar(Activity activity, boolean dark) {

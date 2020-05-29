@@ -1,10 +1,33 @@
 package com.andy.andyzwanandroid.ui.home;
 
-import java.io.Serializable;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.widget.Toast;
 
-public class HomeViewBean implements Serializable {
+import androidx.annotation.RequiresApi;
+import androidx.databinding.BaseObservable;
+
+import com.andy.andyzwanandroid.BR;
+import com.andy.andyzwanandroid.R;
+import com.andy.andyzwanandroid.adapter.BindingAdapter;
+import com.andy.andyzwanandroid.application.WanAndroidApplication;
+import com.andy.andyzwanandroid.httpUtils.HttpCallBack;
+import com.andy.andyzwanandroid.httpUtils.HttpManager;
+import com.andy.andyzwanandroid.httpUtils.HttpParams;
+import com.google.gson.Gson;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.IntConsumer;
+
+public class HomeViewBean extends BaseObservable implements Serializable {
 
     HomeData data;
+    List<HomeDatas> list;
 
     public HomeData getData() {
         return data;
@@ -14,7 +37,41 @@ public class HomeViewBean implements Serializable {
         this.data = data;
     }
 
-    public class HomeData implements Serializable {
+    public List<HomeDatas> getList() {
+        return list;
+    }
+
+    public void setList(List<HomeDatas> list) {
+        this.list = list;
+    }
+
+    public void load() {
+        HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest("https://www.wanandroid.com/article/list/1/json", new HttpParams(), new HttpCallBack() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSuccess(String response) {
+                try{
+                    setData(new Gson().fromJson(response,HomeViewBean.class).getData());
+                    setList(new ArrayList<>(Arrays.asList(getData().getDatas())));
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+
+            @Override
+            public void onSocketTimeout() {
+
+            }
+        });
+    }
+
+
+    public class HomeData extends BaseObservable implements Serializable {
 
         //页码
         int curPage;
@@ -38,7 +95,7 @@ public class HomeViewBean implements Serializable {
         }
     }
 
-    public class HomeDatas implements Serializable {
+    public class HomeDatas extends BaseObservable implements Serializable {
 
         String apkLink;
         int audit;

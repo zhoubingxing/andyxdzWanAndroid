@@ -3,6 +3,7 @@
     package="com.andy.andyzwanandroid">
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
+        android:name=".application.WanAndroidApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
