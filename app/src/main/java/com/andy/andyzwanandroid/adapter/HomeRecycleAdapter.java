@@ -23,6 +23,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<HomeRecycleAdapter.
     private HomeViewBean homeViewBean;
 
     public HomeRecycleAdapter(HomeViewBean homeViewBean) {
+        super();
         this.homeViewBean = homeViewBean;
     }
 

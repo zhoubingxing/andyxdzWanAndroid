@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.Utils;
+package com.andy.andyzwanandroid.utils;
 
 import android.os.Build;
 import android.os.Environment;

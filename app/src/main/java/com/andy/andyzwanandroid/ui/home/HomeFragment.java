@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.andy.andyzwanandroid.R;
 import com.andy.andyzwanandroid.activity.MainActivity;
 import com.andy.andyzwanandroid.adapter.BindingAdapter;
+import com.andy.andyzwanandroid.adapter.HomeRecycleAdapter;
 import com.andy.andyzwanandroid.databinding.FragmentHomeBinding;
 import com.andy.andyzwanandroid.httpUtils.HttpCallBack;
 import com.andy.andyzwanandroid.httpUtils.HttpManager;
@@ -55,20 +56,17 @@ public class HomeFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false);
 
-        homeViewModel = new HomeViewModel(getActivity(),binding);
+        homeViewModel = new HomeViewModel(this,binding);
         binding.setHomeViewModel(homeViewModel);
         binding.setLifecycleOwner(this);
-
-
-
-
-        binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         return binding.getRoot();
     }
 
     public void setRecycle(BindingAdapter adapter) {
-
+        getActivity().runOnUiThread(()->{
+            binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+            binding.recycler.setAdapter(adapter);
+        });
     }
 
     private void initView() {

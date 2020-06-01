@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.andy.andyzwanandroid.R;
-import com.andy.andyzwanandroid.Utils.StatusBarUtil;
+import com.andy.andyzwanandroid.utils.StatusBarUtil;
 
 
 public abstract class BaseActivity extends AppCompatActivity {

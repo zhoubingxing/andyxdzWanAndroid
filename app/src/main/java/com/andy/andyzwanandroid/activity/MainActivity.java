@@ -1,6 +1,7 @@
 package com.andy.andyzwanandroid.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.andy.andyzwanandroid.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -9,6 +10,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import java.util.Date;
 
 public class MainActivity extends BaseActivity {
 
@@ -30,7 +33,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     void initView() {
-
     }
 
 }

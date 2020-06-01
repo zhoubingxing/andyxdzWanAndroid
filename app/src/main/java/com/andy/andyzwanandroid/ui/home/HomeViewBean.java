@@ -3,6 +3,7 @@ package com.andy.andyzwanandroid.ui.home;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -15,6 +16,7 @@ import com.andy.andyzwanandroid.application.WanAndroidApplication;
 import com.andy.andyzwanandroid.httpUtils.HttpCallBack;
 import com.andy.andyzwanandroid.httpUtils.HttpManager;
 import com.andy.andyzwanandroid.httpUtils.HttpParams;
+import com.andy.andyzwanandroid.utils.WanCallback;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -45,7 +47,7 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         this.list = list;
     }
 
-    public void load() {
+    public void load(WanCallback callback) {
         HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest("https://www.wanandroid.com/article/list/1/json", new HttpParams(), new HttpCallBack() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -53,6 +55,7 @@ public class HomeViewBean extends BaseObservable implements Serializable {
                 try{
                     setData(new Gson().fromJson(response,HomeViewBean.class).getData());
                     setList(new ArrayList<>(Arrays.asList(getData().getDatas())));
+                    callback.callback(null);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -60,12 +63,12 @@ public class HomeViewBean extends BaseObservable implements Serializable {
 
             @Override
             public void onFailure() {
-
+                Log.d("OKhttp","onFailure");
             }
 
             @Override
             public void onSocketTimeout() {
-
+                Log.d("OKhttp","onSocketTimeout");
             }
         });
     }
