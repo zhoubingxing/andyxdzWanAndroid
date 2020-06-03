@@ -44,6 +44,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
     //Gson
     implementation 'com.google.code.gson:gson:2.8.6'
-}
+}`

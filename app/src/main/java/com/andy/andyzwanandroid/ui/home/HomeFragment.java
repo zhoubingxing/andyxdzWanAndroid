@@ -57,13 +57,22 @@ public class HomeFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false);
 
         homeViewModel = new HomeViewModel(this,binding);
-        binding.setHomeViewModel(homeViewModel);
         binding.setLifecycleOwner(this);
+
+        List<String> list = new ArrayList<>();
+        list.add("a");list.add("b");
+
+        BindingAdapter<String> bindingAdapter = new BindingAdapter<>(this.getActivity(), list,R.layout.recycler_home_banner_item);
+        LinearLayoutManager lm = new LinearLayoutManager(this.getActivity());
+        lm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        binding.homeBanner.setLayoutManager(lm);
+        binding.homeBanner.setAdapter(bindingAdapter);
+
         return binding.getRoot();
     }
 
     public void setRecycle(BindingAdapter adapter) {
-        getActivity().runOnUiThread(()->{
+        getActivity().runOnUiThread(()-> {
             binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
             binding.recycler.setAdapter(adapter);
         });

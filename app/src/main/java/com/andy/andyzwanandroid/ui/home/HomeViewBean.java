@@ -22,29 +22,22 @@ import com.google.gson.Gson;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.IntConsumer;
 
 public class HomeViewBean extends BaseObservable implements Serializable {
 
-    HomeData data;
-    List<HomeDatas> list;
+    private HomeData data;
+    private List<HomeDatas> list;
+    private DateText dateText;
 
-    public HomeData getData() {
-        return data;
-    }
-
-    public void setData(HomeData data) {
-        this.data = data;
-    }
-
-    public List<HomeDatas> getList() {
-        return list;
-    }
-
-    public void setList(List<HomeDatas> list) {
-        this.list = list;
+    HomeViewBean() {
+        data = new HomeData();
+        list = new ArrayList<>();
+        dateText = new DateText();
     }
 
     public void load(WanCallback callback) {
@@ -73,7 +66,85 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         });
     }
 
+    public DateText getDateText() {
+        return dateText;
+    }
 
+    public void setDateText(DateText dateText) {
+        this.dateText = dateText;
+    }
+
+    public HomeData getData() {
+        return data;
+    }
+
+    public void setData(HomeData data) {
+        this.data = data;
+    }
+
+    public List<HomeDatas> getList() {
+        return list;
+    }
+
+    public void setList(List<HomeDatas> list) {
+        this.list = list;
+    }
+
+    public class DateText {
+
+        public String day;
+        public String month;
+        public String title;
+
+        DateText() {
+            Calendar calendar = Calendar.getInstance();
+            this.month = getMonthText(calendar.get(Calendar.MONTH));
+            this.day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+            this.title = getTitle(calendar.get(Calendar.HOUR_OF_DAY));
+        }
+
+        String getTitle(int hours) {
+            if(hours < 7) {
+                return "深夜了，请注意休息。";
+            } else if (hours < 12){
+                return "早上好！";
+            }  else if (hours < 18){
+                return "AndyWanAndroid";
+            }  else {
+                return "晚上好！";
+            }
+        }
+
+        String getMonthText(int month) {
+            switch (month + 1) {
+                case 1:
+                    return "一月";
+                case 2:
+                    return "二月";
+                case 3:
+                    return "三月";
+                case 4:
+                    return "四月";
+                case 5:
+                    return "五月";
+                case 6:
+                    return "六月";
+                case 7:
+                    return "七月";
+                case 8:
+                    return "八月";
+                case 9:
+                    return "九月";
+                case 10:
+                    return "十月";
+                case 11:
+                    return "十一月";
+                case 12:
+                    return "十二月";
+            }
+            return "神奇之月";
+        }
+    }
     public class HomeData extends BaseObservable implements Serializable {
 
         //页码
@@ -368,6 +439,5 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         }
     }
 }
-
 
 
