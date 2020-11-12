@@ -97,13 +97,12 @@ public class HttpManager {
 
             @Override
             public void onResponse(Call call, Response response) {
-                new Thread(()->{
-                    try {
-                        callBack.onSuccess(response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+                try {
+                    assert response.body() != null;
+                    callBack.onSuccess(response.body().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

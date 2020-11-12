@@ -150,7 +150,7 @@
     <color name="darkblue">#00008b</color> <!-- 暗蓝色 -->
     <color name="navy">#000080</color> <!-- 海军色 -->
     <color name="black">#000000</color> <!-- 黑色 -->e
-    <color name="color_FFFFFFFF">#FFFFFF</color> <!-- 透明0纯白 -->
-    <color name="color_00FFFFFF">#00FFFFFF</color> <!-- 透明100白色 -->
+    <color name="color_FFFFFFFF">#000000</color> <!-- 透明0白色 -->
+    <color name="color_00FFFFFF">#00000000</color> <!-- 透明100白色 -->
 
 </resources>

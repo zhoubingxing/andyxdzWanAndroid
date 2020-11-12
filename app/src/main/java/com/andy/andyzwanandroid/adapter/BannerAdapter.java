@@ -16,20 +16,31 @@ import java.util.List;
 import java.util.function.IntConsumer;
 
 /**
- * DataBinding 基类适配器
+ * BannerAdapter
  *
- * @author zhouchaoliang 2020/05/28
+ * @author zhouchaoliang 2020/11/12
  */
-public class BindingAdapter<T> extends RecyclerAdapter<T, ViewDataBinding> {
+public class BannerAdapter<T> extends RecyclerAdapter<T, ViewDataBinding> {
 
     private IntConsumer onItemClickListener;
 
-    public BindingAdapter(Context context, List<T> list, @LayoutRes int layoutId) {
+    public BannerAdapter(Context context, List<T> list, @LayoutRes int layoutId) {
         super(context, list, layoutId);
     }
 
     public void setOnItemClickListener(IntConsumer onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerHolder<ViewDataBinding> holder, int position) {
+        final T t = mList.get(position % mList.size());
+        onBind(holder, t, position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mList == null ? 0 : Integer.MAX_VALUE;
     }
 
     @Override

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="item"
-            type="String" />
+            type="com.andy.andyzwanandroid.ui.home.HomeBannerBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,14 +17,41 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            android:src="@drawable/timg" />
+            app:imgPath="@{item.imageUrl}" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/jianbian"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:text="@{item}"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:id="@+id/banner_title"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@{item.title}"
+            android:paddingLeft="20dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
             />
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/banner_title"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="木鱼水心 / 缘之空"
+            android:paddingTop="10dp"
+            android:paddingStart="20dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_width="match_parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

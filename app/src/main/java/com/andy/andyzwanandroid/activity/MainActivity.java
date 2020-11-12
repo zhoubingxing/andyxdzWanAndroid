@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.andy.andyzwanandroid.R;
+import com.andy.andyzwanandroid.application.WanAndroidApplication;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.navigation.NavController;

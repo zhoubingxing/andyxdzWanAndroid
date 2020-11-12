@@ -11,12 +11,16 @@ import com.andy.andyzwanandroid.activity.HomeWebActivity;
 import com.andy.andyzwanandroid.adapter.BindingAdapter;
 import com.andy.andyzwanandroid.databinding.FragmentHomeBinding;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 public class HomeViewModel extends ViewModel {
 
     private HomeFragment fragment;
     private FragmentHomeBinding binding;
-
     private HomeViewBean homeViewBean;
+
+
 
     public HomeViewModel(HomeFragment fragment, FragmentHomeBinding binding) {
         this.fragment = fragment;
@@ -24,14 +28,12 @@ public class HomeViewModel extends ViewModel {
         homeViewBean = new HomeViewBean();
         binding.setHomeViewBean(homeViewBean);
         homeViewBean.load((object -> {
-            BindingAdapter<HomeViewBean.HomeDatas> adapter = new BindingAdapter<>(fragment.getActivity(),homeViewBean.getList(),R.layout.recycler_home_item);
+            BindingAdapter<HomeRecyclerBean> adapter = new BindingAdapter<>(fragment.getActivity(),homeViewBean.getList(),R.layout.recycler_home_item);
             adapter.setOnItemClickListener((value)-> {
                 Intent intent = new Intent();
                 intent.putExtra("url",homeViewBean.getList().get(value).getLink());
-                intent.setClass(fragment.getActivity(), HomeWebActivity.class);
+                intent.setClass(Objects.requireNonNull(fragment.getActivity()), HomeWebActivity.class);
                 fragment.getActivity().startActivity(intent);
-//                homeViewBean.getList().get(value).setTitle("sadsadsadsadsad");
-//                adapter.notifyDataSetChanged();
             });
             fragment.setRecycle(adapter);
         }));
@@ -40,19 +42,28 @@ public class HomeViewModel extends ViewModel {
 
 
 
-    //liveData样式
-    private MutableLiveData<String> mText;
-    public LiveData<String> getText() {
-        return mText;
+    private MutableLiveData<HomeViewBean> homeViewModelLiveData;
+
+    public MutableLiveData<HomeViewBean> getHomeViewModelLiveData() {
+        return homeViewModelLiveData;
     }
-    public void setText(String mText) {
-        this.mText.setValue(mText);
+
+    public void setHomeViewModelLiveData(MutableLiveData<HomeViewBean> homeViewModelLiveData) {
+        this.homeViewModelLiveData = homeViewModelLiveData;
     }
-    //end
+
+    public void setData(HomeViewBean.HomeData data) {
+        HomeViewBean temp = homeViewModelLiveData.getValue();
+        if (temp == null) {
+            temp = new HomeViewBean();
+        }
+        temp.setData(data);
+        homeViewModelLiveData.setValue(temp);
+    }
 
     public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        homeViewModelLiveData = new MutableLiveData<>();
+        homeViewModelLiveData.setValue(new HomeViewBean());
     }
 
 
