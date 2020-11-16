@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.ui.dashboard;
+package com.andy.andyzwanandroid.fragment.dashboard;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

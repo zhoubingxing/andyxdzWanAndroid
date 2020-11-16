@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.ui.home;
+package com.andy.andyzwanandroid.fragment.home.bean;
 
 import android.widget.ImageView;
 

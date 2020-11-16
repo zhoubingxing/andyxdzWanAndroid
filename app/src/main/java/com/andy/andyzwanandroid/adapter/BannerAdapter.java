@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.IntConsumer;
 
 /**
- * BannerAdapter
+ * BannerAdapter 主页BannerAdapter
  *
  * @author zhouchaoliang 2020/11/12
  */
@@ -52,7 +52,7 @@ public class BannerAdapter<T> extends RecyclerAdapter<T, ViewDataBinding> {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.accept(position);
+                    onItemClickListener.accept(position % mList.size());
                 }
             });
         }

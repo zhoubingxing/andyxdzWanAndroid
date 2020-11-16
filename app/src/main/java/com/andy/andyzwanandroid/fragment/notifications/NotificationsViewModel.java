@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.ui.notifications;
+package com.andy.andyzwanandroid.fragment.notifications;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

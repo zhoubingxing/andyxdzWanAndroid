@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.ui.dashboard;
+package com.andy.andyzwanandroid.fragment.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

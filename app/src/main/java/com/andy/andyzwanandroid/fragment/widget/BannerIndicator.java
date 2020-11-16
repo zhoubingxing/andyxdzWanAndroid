@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.ui.widget;
+package com.andy.andyzwanandroid.fragment.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;

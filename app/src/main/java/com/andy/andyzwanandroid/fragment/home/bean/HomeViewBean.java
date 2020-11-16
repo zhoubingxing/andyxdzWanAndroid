@@ -1,89 +1,37 @@
-package com.andy.andyzwanandroid.ui.home;
+package com.andy.andyzwanandroid.fragment.home.bean;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
 import androidx.databinding.BaseObservable;
 
-import com.andy.andyzwanandroid.BR;
 import com.andy.andyzwanandroid.R;
-import com.andy.andyzwanandroid.adapter.BindingAdapter;
-import com.andy.andyzwanandroid.application.WanAndroidApplication;
-import com.andy.andyzwanandroid.httpUtils.HttpCallBack;
-import com.andy.andyzwanandroid.httpUtils.HttpManager;
-import com.andy.andyzwanandroid.httpUtils.HttpParams;
-import com.andy.andyzwanandroid.utils.WanCallback;
-import com.google.gson.Gson;
+import com.andy.andyzwanandroid.fragment.home.bean.HomeBannerBean;
+import com.andy.andyzwanandroid.fragment.home.bean.HomeRecyclerBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.IntConsumer;
 
 public class HomeViewBean extends BaseObservable implements Serializable {
 
-    private HomeData data;
+    private HomeNewsData data;
     private List<HomeRecyclerBean> list;
+    private HomeBannerData bannerData;
     private DateText dateText;
 
-    HomeViewBean() {
-        data = new HomeData();
+    public HomeViewBean() {
+        data = new HomeNewsData();
         list = new ArrayList<>();
         dateText = new DateText();
+        bannerData = new HomeBannerData();
     }
 
-    public void load(WanCallback callback) {
-        HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest("https://www.wanandroid.com/article/list/1/json", new HttpParams(), new HttpCallBack() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onSuccess(String response) {
-                try{
-                    setData(new Gson().fromJson(response,HomeViewBean.class).getData());
-                    setList(new ArrayList<>(Arrays.asList(getData().getDatas())));
-                    for (int i = 0; i < list.size() ; i++) {
-                        switch (i % 5) {
-                            case 0 :
-                                list.get(i).setLayoutId(R.drawable.recycler_image1);
-                                break;
-                            case 1 :
-                                list.get(i).setLayoutId(R.drawable.recycler_image2);
-                                break;
-                            case 2 :
-                                list.get(i).setLayoutId(R.drawable.recycler_image3);
-                                break;
-                            case 3 :
-                                list.get(i).setLayoutId(R.drawable.recycler_image4);
-                                break;
-                            case 4 :
-                                list.get(i).setLayoutId(R.drawable.recycler_image5);
-                                break;
-                        }
-                    }
-                    callback.callback(null);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+    public HomeBannerData getBannerData() {
+        return bannerData;
+    }
 
-            @Override
-            public void onFailure() {
-                Log.d("OKhttp","onFailure");
-            }
-
-            @Override
-            public void onSocketTimeout() {
-                Log.d("OKhttp","onSocketTimeout");
-            }
-        });
+    public void setBannerData(HomeBannerData bannerData) {
+        this.bannerData = bannerData;
     }
 
     public DateText getDateText() {
@@ -94,11 +42,11 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         this.dateText = dateText;
     }
 
-    public HomeData getData() {
+    public HomeNewsData getData() {
         return data;
     }
 
-    public void setData(HomeData data) {
+    public void setData(HomeNewsData data) {
         this.data = data;
         setList(new ArrayList<>(Arrays.asList(getData().getDatas())));
         for (int i = 0; i < list.size() ; i++) {
@@ -189,7 +137,7 @@ public class HomeViewBean extends BaseObservable implements Serializable {
 
         }
     }
-    public class HomeData extends BaseObservable implements Serializable {
+    public static class HomeNewsData extends BaseObservable implements Serializable {
 
         //页码
         int curPage;
@@ -213,6 +161,18 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         }
     }
 
+    public static class HomeBannerData extends BaseObservable implements Serializable {
+
+        HomeBannerBean[] data;
+
+        public HomeBannerBean[] getData() {
+            return data;
+        }
+
+        public void setData(HomeBannerBean[] data) {
+            this.data = data;
+        }
+    }
 }
 
 

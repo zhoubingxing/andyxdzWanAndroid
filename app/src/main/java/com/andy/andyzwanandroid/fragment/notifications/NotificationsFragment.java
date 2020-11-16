@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.ui.notifications;
+package com.andy.andyzwanandroid.fragment.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
