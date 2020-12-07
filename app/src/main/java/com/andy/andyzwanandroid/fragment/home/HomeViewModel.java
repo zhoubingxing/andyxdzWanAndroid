@@ -42,12 +42,6 @@ public class HomeViewModel extends ViewModel {
         homeViewData.setValue(temp);
     }
 
-    //更新banner数据
-    public void setBannerData(List<HomeBannerBean> data) {
-        homeBannerData.setValue(data);
-    }
-
-
 
     public HomeViewModel() {
         homeViewData = new MutableLiveData<>();

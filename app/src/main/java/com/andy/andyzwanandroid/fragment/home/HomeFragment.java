@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
 
         WanAndroidApplication.getRefWatcher().watch(this);
         //初始化ViewModel
-        homeViewModel = new ViewModelProvider(getActivity()).get(HomeViewModel.class);
+        homeViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(HomeViewModel.class);
 
         binding.setLifecycleOwner(getActivity());
         binding.setHomeViewBean(homeViewModel.getHomeViewData().getValue());
@@ -139,6 +139,7 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
 
+    //刷新文章列表数据
     public void setRecycle(BindingAdapter adapter) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(()-> {
@@ -154,7 +155,8 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public class SmoothLinearLayoutManager extends LinearLayoutManager {
+    //设置滚动速度的自定义LayoutManager
+    public static class SmoothLinearLayoutManager extends LinearLayoutManager {
 
         public SmoothLinearLayoutManager(Context context) {
             super(context);

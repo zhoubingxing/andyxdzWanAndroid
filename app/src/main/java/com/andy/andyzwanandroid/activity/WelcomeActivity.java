@@ -17,7 +17,7 @@ public class WelcomeActivity extends FragmentActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        /*采用handler创建子线程实现页面跳转*/
+        //采用handler创建子线程实现页面跳转
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
