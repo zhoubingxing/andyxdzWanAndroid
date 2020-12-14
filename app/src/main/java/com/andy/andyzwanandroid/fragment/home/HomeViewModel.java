@@ -3,6 +3,8 @@ package com.andy.andyzwanandroid.fragment.home;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.andy.andyzwanandroid.Database.WanAndroidDataBase;
+import com.andy.andyzwanandroid.application.WanAndroidApplication;
 import com.andy.andyzwanandroid.fragment.home.bean.HomeBannerBean;
 import com.andy.andyzwanandroid.fragment.home.bean.HomeViewBean;
 
@@ -33,12 +35,15 @@ public class HomeViewModel extends ViewModel {
     }
 
     //更新首页文章数据
-    public void setData(HomeViewBean.HomeNewsData data) {
+    public void setData(HomeViewBean.HomeInformationData data) {
         HomeViewBean temp = homeViewData.getValue();
         if (temp == null) {
             temp = new HomeViewBean();
         }
         temp.setData(data);
+        new Thread(()->{
+            WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().insertInformationData(data.getDatas());
+        }).start();
         homeViewData.setValue(temp);
     }
 

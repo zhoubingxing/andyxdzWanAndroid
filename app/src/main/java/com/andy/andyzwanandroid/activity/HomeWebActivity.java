@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -31,4 +34,16 @@ public class HomeWebActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 销毁时注意需要对WebView进行销毁，防止内存泄露
+     */
+    @Override
+    protected void onDestroy() {
+        ViewParent parent = webView.getParent();
+        if (parent instanceof ViewGroup) {
+            ((ViewGroup) parent).removeView(webView);
+        }
+        webView.destroy();
+        super.onDestroy();
+    }
 }

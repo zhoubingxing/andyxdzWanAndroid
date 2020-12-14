@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.andy.andyzwanandroid.Database.WanAndroidDataBase;
 import com.andy.andyzwanandroid.R;
 import com.andy.andyzwanandroid.activity.HomeWebActivity;
 import com.andy.andyzwanandroid.adapter.BannerAdapter;
@@ -32,7 +33,6 @@ import com.andy.andyzwanandroid.fragment.home.bean.HomeBannerBean;
 import com.andy.andyzwanandroid.fragment.home.bean.HomeRecyclerBean;
 import com.andy.andyzwanandroid.fragment.widget.BannerIndicator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -57,7 +57,6 @@ public class HomeFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false);
 
-        WanAndroidApplication.getRefWatcher().watch(this);
         //初始化ViewModel
         homeViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(HomeViewModel.class);
 
@@ -77,9 +76,10 @@ public class HomeFragment extends Fragment {
         });
 
         //http请求主页数据
-        HomeRepository.loadHomeData((data)->{
+        HomeRepository.loadHomeInformationData((data)->{
+            WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().getInformationData();
             getActivity().runOnUiThread(()->{
-                homeViewModel.setData((HomeViewBean.HomeNewsData)data);
+                homeViewModel.setData((HomeViewBean.HomeInformationData)data);
             });
         });
 

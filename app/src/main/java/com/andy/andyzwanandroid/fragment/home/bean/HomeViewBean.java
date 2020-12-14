@@ -3,8 +3,6 @@ package com.andy.andyzwanandroid.fragment.home.bean;
 import androidx.databinding.BaseObservable;
 
 import com.andy.andyzwanandroid.R;
-import com.andy.andyzwanandroid.fragment.home.bean.HomeBannerBean;
-import com.andy.andyzwanandroid.fragment.home.bean.HomeRecyclerBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,24 +12,14 @@ import java.util.List;
 
 public class HomeViewBean extends BaseObservable implements Serializable {
 
-    private HomeNewsData data;
+    private HomeInformationData data;
     private List<HomeRecyclerBean> list;
-    private HomeBannerData bannerData;
     private DateText dateText;
 
     public HomeViewBean() {
-        data = new HomeNewsData();
+        data = new HomeInformationData();
         list = new ArrayList<>();
         dateText = new DateText();
-        bannerData = new HomeBannerData();
-    }
-
-    public HomeBannerData getBannerData() {
-        return bannerData;
-    }
-
-    public void setBannerData(HomeBannerData bannerData) {
-        this.bannerData = bannerData;
     }
 
     public DateText getDateText() {
@@ -42,11 +30,11 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         this.dateText = dateText;
     }
 
-    public HomeNewsData getData() {
+    public HomeInformationData getData() {
         return data;
     }
 
-    public void setData(HomeNewsData data) {
+    public void setData(HomeInformationData data) {
         this.data = data;
         setList(new ArrayList<>(Arrays.asList(getData().getDatas())));
         for (int i = 0; i < list.size() ; i++) {
@@ -137,7 +125,7 @@ public class HomeViewBean extends BaseObservable implements Serializable {
 
         }
     }
-    public static class HomeNewsData extends BaseObservable implements Serializable {
+    public static class HomeInformationData extends BaseObservable implements Serializable {
 
         //页码
         int curPage;

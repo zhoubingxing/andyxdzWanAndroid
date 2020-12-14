@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide;
 import java.io.Serializable;
 
 
-
 public class HomeBannerBean extends BaseObservable implements Serializable {
 
     String desc;
@@ -92,7 +91,6 @@ public class HomeBannerBean extends BaseObservable implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
-
 
 
     public void setImagePath(String imagePath) {
