@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.fragment.home.bean;
+package com.andy.andyzwanandroid.bean;
 
 import androidx.databinding.BaseObservable;
 
@@ -12,12 +12,10 @@ import java.util.List;
 
 public class HomeViewBean extends BaseObservable implements Serializable {
 
-    private HomeInformationData data;
-    private List<HomeRecyclerBean> list;
+    private List<HomeInformationBean> list;
     private DateText dateText;
 
     public HomeViewBean() {
-        data = new HomeInformationData();
         list = new ArrayList<>();
         dateText = new DateText();
     }
@@ -30,13 +28,7 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         this.dateText = dateText;
     }
 
-    public HomeInformationData getData() {
-        return data;
-    }
-
-    public void setData(HomeInformationData data) {
-        this.data = data;
-        setList(new ArrayList<>(Arrays.asList(getData().getDatas())));
+    public void setData() {
         for (int i = 0; i < list.size() ; i++) {
             switch (i % 5) {
                 case 0 :
@@ -58,11 +50,11 @@ public class HomeViewBean extends BaseObservable implements Serializable {
         }
     }
 
-    public List<HomeRecyclerBean> getList() {
+    public List<HomeInformationBean> getList() {
         return list;
     }
 
-    public void setList(List<HomeRecyclerBean> list) {
+    public void setList(List<HomeInformationBean> list) {
         this.list = list;
     }
 
@@ -123,29 +115,6 @@ public class HomeViewBean extends BaseObservable implements Serializable {
 
 
 
-        }
-    }
-    public static class HomeInformationData extends BaseObservable implements Serializable {
-
-        //页码
-        int curPage;
-
-        HomeRecyclerBean[] datas;
-
-        public int getCurPage() {
-            return curPage;
-        }
-
-        public void setCurPage(int curPage) {
-            this.curPage = curPage;
-        }
-
-        public HomeRecyclerBean[] getDatas() {
-            return datas;
-        }
-
-        public void setDatas(HomeRecyclerBean[] datas) {
-            this.datas = datas;
         }
     }
 

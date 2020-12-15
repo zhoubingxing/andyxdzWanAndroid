@@ -26,11 +26,11 @@ import com.andy.andyzwanandroid.activity.HomeWebActivity;
 import com.andy.andyzwanandroid.adapter.BannerAdapter;
 import com.andy.andyzwanandroid.adapter.BindingAdapter;
 import com.andy.andyzwanandroid.application.WanAndroidApplication;
+import com.andy.andyzwanandroid.bean.HomeInformationBean;
 import com.andy.andyzwanandroid.databinding.FragmentHomeBinding;
-import com.andy.andyzwanandroid.fragment.home.bean.HomeViewBean;
+import com.andy.andyzwanandroid.bean.HomeViewBean;
 import com.andy.andyzwanandroid.repository.HomeRepository;
-import com.andy.andyzwanandroid.fragment.home.bean.HomeBannerBean;
-import com.andy.andyzwanandroid.fragment.home.bean.HomeRecyclerBean;
+import com.andy.andyzwanandroid.bean.HomeBannerBean;
 import com.andy.andyzwanandroid.fragment.widget.BannerIndicator;
 
 import java.util.List;
@@ -63,26 +63,23 @@ public class HomeFragment extends Fragment {
         binding.setLifecycleOwner(getActivity());
         binding.setHomeViewBean(homeViewModel.getHomeViewData().getValue());
 
+
+
+        homeViewModel.setHomeInformationData(WanAndroidDataBase.getDatabase(getActivity())
+                .homeInformationDao().getInformationData());
         //监听数据变化刷新主页列表
-        homeViewModel.getHomeViewData().observe(getActivity(),(data)->{
-            BindingAdapter<HomeRecyclerBean> adapter = new BindingAdapter<>(this.getActivity(),data.getList(),R.layout.recycler_home_item);
+        homeViewModel.getHomeInformationData().observe(getActivity(),(newData)->{
+            BindingAdapter<HomeInformationBean> adapter = new BindingAdapter<>(this.getActivity(),newData,R.layout.recycler_home_item);
             adapter.setOnItemClickListener((value)-> {
                 Intent intent = new Intent();
-                intent.putExtra("url",data.getList().get(value).getLink());
+                intent.putExtra("url",newData.get(value).getLink());
                 intent.setClass(Objects.requireNonNull(this.getActivity()), HomeWebActivity.class);
                 this.getActivity().startActivity(intent);
             });
             this.setRecycle(adapter);
         });
-
         //http请求主页数据
-        HomeRepository.loadHomeInformationData((data)->{
-            WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().getInformationData();
-            getActivity().runOnUiThread(()->{
-                homeViewModel.setData((HomeViewBean.HomeInformationData)data);
-            });
-        });
-
+        HomeRepository.loadHomeInformationData();
 
         //http请求banner数据
         HomeRepository.loadBannerData((data)->{

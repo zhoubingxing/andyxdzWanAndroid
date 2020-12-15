@@ -5,7 +5,7 @@
     <data>
         <variable
             name="item"
-            type="com.andy.andyzwanandroid.fragment.home.bean.HomeBannerBean" />
+            type="com.andy.andyzwanandroid.bean.HomeBannerBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

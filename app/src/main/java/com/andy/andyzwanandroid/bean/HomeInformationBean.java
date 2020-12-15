@@ -1,4 +1,4 @@
-package com.andy.andyzwanandroid.fragment.home.bean;
+package com.andy.andyzwanandroid.bean;
 
 import android.widget.ImageView;
 
@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 @Entity(tableName = "t_home_information_data")
-public class HomeRecyclerBean extends BaseObservable implements Serializable {
+public class HomeInformationBean extends BaseObservable implements Serializable {
 
     @PrimaryKey
     int id;

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="com.andy.andyzwanandroid.fragment.home.bean.HomeRecyclerBean" />
+            type="com.andy.andyzwanandroid.bean.HomeInformationBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
