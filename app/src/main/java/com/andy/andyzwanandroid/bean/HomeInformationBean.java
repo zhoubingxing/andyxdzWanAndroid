@@ -1,7 +1,6 @@
 package com.andy.andyzwanandroid.bean;
 
 import android.widget.ImageView;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.BindingAdapter;
 import androidx.room.Entity;

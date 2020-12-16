@@ -19,7 +19,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@{item.layoutId}"
             android:scaleType="centerCrop"

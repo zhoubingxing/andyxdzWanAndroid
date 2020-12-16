@@ -66,11 +66,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     abstract void initView();
 
-    //今日头条屏幕适配 目标dp：360 以pixel3a为例
+    //今日头条屏幕适配 目标宽度dp：392.7 以pixel3a为例
     void setCoustomDensity() {
         final DisplayMetrics appDisplayMetrics = WanAndroidApplication.getInstance().getApplicationContext()
                 .getResources().getDisplayMetrics();
-        final float targetDensity = appDisplayMetrics.widthPixels / 410;
+        final float targetDensity = (float) (appDisplayMetrics.widthPixels / 392.7);
         final int targetDensityDpi = (int)(targetDensity * 160);
 
         appDisplayMetrics.density =  targetDensity;

@@ -1,40 +1,26 @@
 package com.andy.andyzwanandroid.bean;
 
 import android.widget.ImageView;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.BindingAdapter;
-
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import com.andy.andyzwanandroid.R;
 import com.bumptech.glide.Glide;
-
 import java.io.Serializable;
 
-
+@Entity(tableName = "t_home_banner_data")
 public class HomeBannerBean extends BaseObservable implements Serializable {
 
-    String desc;
+    @PrimaryKey
     int id;
+    String desc;
     int isVisible;
     int order;
     String title;
     String type;
     String url;
     String imagePath;
-
-    public HomeBannerBean() {
-    }
-
-    public HomeBannerBean(String desc, int id, int isVisible, int order, String title, String type, String url, String imagePath) {
-        this.desc = desc;
-        this.id = id;
-        this.isVisible = isVisible;
-        this.order = order;
-        this.title = title;
-        this.type = type;
-        this.url = url;
-        this.imagePath = imagePath;
-    }
 
     public String getDesc() {
         return desc;

@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.andy.andyzwanandroid.bean.HomeBannerBean;
 import com.andy.andyzwanandroid.bean.HomeInformationBean;
 
 /**
@@ -13,7 +14,7 @@ import com.andy.andyzwanandroid.bean.HomeInformationBean;
  * @author: zhouchaoliang
  * @date :   12/14/20 10:12 AM
  */
-@Database(entities = {HomeInformationBean.class}, version = 1)//申明Entity和数据库的版本号
+@Database(entities = {HomeInformationBean.class, HomeBannerBean.class}, version = 2)//申明Entity和数据库的版本号
 public abstract class WanAndroidDataBase extends RoomDatabase {
 
     public abstract HomeInformationDao homeInformationDao();//创建DAO的抽象类

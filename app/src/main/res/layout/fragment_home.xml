@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="homeViewBean"
-            type="com.andy.andyzwanandroid.bean.HomeViewBean" />
+            name="homeTitleData"
+            type="com.andy.andyzwanandroid.bean.HomeTitleData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,16 +29,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="5dp"
-                android:text="@{homeViewBean.dateText.day}"
+                android:text="@{homeTitleData.day}"
                 android:textColor="@color/black"
-                android:textSize="23sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/home_month"
-                android:text="@{homeViewBean.dateText.month}"
+                android:text="@{homeTitleData.month}"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
@@ -65,9 +65,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="@{homeViewBean.dateText.title}"
+                android:text="@{homeTitleData.title}"
                 android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="@id/home_line"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -85,11 +85,17 @@
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_information"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/home_title_bar"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,9 +122,8 @@
                     app:radius="3dp"
                     app:space="10dp"/>
 
-
-
                 <androidx.recyclerview.widget.RecyclerView
+                    android:overScrollMode="never"
                     android:id="@+id/recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,6 +132,8 @@
                     android:paddingBottom="?attr/actionBarSize"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

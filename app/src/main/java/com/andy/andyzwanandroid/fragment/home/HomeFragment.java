@@ -20,15 +20,12 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.andy.andyzwanandroid.Database.WanAndroidDataBase;
 import com.andy.andyzwanandroid.R;
 import com.andy.andyzwanandroid.activity.HomeWebActivity;
 import com.andy.andyzwanandroid.adapter.BannerAdapter;
 import com.andy.andyzwanandroid.adapter.BindingAdapter;
-import com.andy.andyzwanandroid.application.WanAndroidApplication;
 import com.andy.andyzwanandroid.bean.HomeInformationBean;
 import com.andy.andyzwanandroid.databinding.FragmentHomeBinding;
-import com.andy.andyzwanandroid.bean.HomeViewBean;
 import com.andy.andyzwanandroid.repository.HomeRepository;
 import com.andy.andyzwanandroid.bean.HomeBannerBean;
 import com.andy.andyzwanandroid.fragment.widget.BannerIndicator;
@@ -55,104 +52,107 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false);
-
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         //初始化ViewModel
         homeViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(HomeViewModel.class);
-
         binding.setLifecycleOwner(getActivity());
-        binding.setHomeViewBean(homeViewModel.getHomeViewData().getValue());
-
-
-
-        homeViewModel.setHomeInformationData(WanAndroidDataBase.getDatabase(getActivity())
-                .homeInformationDao().getInformationData());
-        //监听数据变化刷新主页列表
-        homeViewModel.getHomeInformationData().observe(getActivity(),(newData)->{
-            BindingAdapter<HomeInformationBean> adapter = new BindingAdapter<>(this.getActivity(),newData,R.layout.recycler_home_item);
-            adapter.setOnItemClickListener((value)-> {
-                Intent intent = new Intent();
-                intent.putExtra("url",newData.get(value).getLink());
-                intent.setClass(Objects.requireNonNull(this.getActivity()), HomeWebActivity.class);
-                this.getActivity().startActivity(intent);
-            });
-            this.setRecycle(adapter);
-        });
-        //http请求主页数据
-        HomeRepository.loadHomeInformationData();
-
-        //http请求banner数据
-        HomeRepository.loadBannerData((data)->{
-            getActivity().runOnUiThread(()->{
-                List<HomeBannerBean> bannerList = (List<HomeBannerBean>)data;
-                if (((List<HomeBannerBean>) data).isEmpty()) {
-                    return;
-                }
-                //设置LayoutManager
-                BannerAdapter<HomeBannerBean> bindingAdapter = new BannerAdapter<>(this.getActivity(), bannerList,R.layout.recycler_home_banner_item);
-                SmoothLinearLayoutManager layoutManager = new SmoothLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                binding.homeBanner.setLayoutManager(layoutManager);
-                bindingAdapter.setOnItemClickListener((value)->{
-                    Intent intent = new Intent();
-                    intent.putExtra("url",((List<HomeBannerBean>) data).get(value).getUrl());
-                    intent.setClass(Objects.requireNonNull(this.getActivity()), HomeWebActivity.class);
-                    this.getActivity().startActivity(intent);
-                });
-                binding.homeBanner.setAdapter(bindingAdapter);
-
-                //自动居中
-                binding.homeBanner.setOnFlingListener(null);
-                LinearSnapHelper snapHelper = new LinearSnapHelper();
-                snapHelper.attachToRecyclerView(binding.homeBanner);
-
-                //定时任务
-                ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-                scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-                    @Override
-                    public void run() {
-                        binding.homeBanner.smoothScrollToPosition(layoutManager.findFirstVisibleItemPosition() + 1);
-                    }
-                }, 2000, 5000, TimeUnit.MILLISECONDS);
-
-                //设置轮播图指示红点
-                final BannerIndicator bannerIndicator = binding.indicator;
-                bannerIndicator.setNumber(bannerList.size());
-                binding.homeBanner.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                            //得到指示器红点的位置
-                            int i = layoutManager.findFirstVisibleItemPosition() % bannerList.size();
-                            bannerIndicator.setPosition(i);
-                        }
-                    }
-                });
-
-            });
-        });
-
-
-
+        binding.setHomeTitleData(homeViewModel.getHomeViewData().getValue());
+        initView();
         return binding.getRoot();
     }
 
-    //刷新文章列表数据
-    public void setRecycle(BindingAdapter adapter) {
+
+    private void initView() {
+        //监听首页文章数据变化
+        homeViewModel.getHomeInformationData().observe(getActivity(), this::setInformationRecycle);
+        //http请求首页文章数据
+        HomeRepository.loadHomeInformationData();
+        //监听banner数据变化
+        homeViewModel.getHomeBannerData().observe(getActivity(),this::setBanner);
+        //http请求banner数据
+        HomeRepository.loadBannerData();
+        //下拉刷新
+        refreshInformationData();
+    }
+
+    /**
+     * 更新bannerUI
+     */
+    public void setBanner(List<HomeBannerBean> data) {
+        if (data.isEmpty()) {
+            return;
+        }
+        //设置LayoutManager
+        BannerAdapter<HomeBannerBean> bindingAdapter = new BannerAdapter<>(this.getActivity(), data, R.layout.recycler_home_banner_item);
+        SmoothLinearLayoutManager layoutManager = new SmoothLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        bindingAdapter.setOnItemClickListener((value) -> {
+            Intent intent = new Intent();
+            intent.putExtra("url", data.get(value).getUrl());
+            intent.setClass(Objects.requireNonNull(this.getActivity()), HomeWebActivity.class);
+            this.getActivity().startActivity(intent);
+        });
+
+        //切换到UI线程
+        getActivity().runOnUiThread(() -> {
+            binding.homeBanner.setLayoutManager(layoutManager);
+            binding.homeBanner.setAdapter(bindingAdapter);
+            //自动居中
+            binding.homeBanner.setOnFlingListener(null);
+            LinearSnapHelper snapHelper = new LinearSnapHelper();
+            snapHelper.attachToRecyclerView(binding.homeBanner);
+
+            //定时任务
+            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+            scheduledExecutorService.scheduleAtFixedRate(()
+                    -> binding.homeBanner.smoothScrollToPosition(layoutManager.findFirstVisibleItemPosition() + 1), 2000, 5000, TimeUnit.MILLISECONDS);
+
+            //设置轮播图指示红点
+            final BannerIndicator bannerIndicator = binding.indicator;
+            bannerIndicator.setNumber(data.size());
+            binding.homeBanner.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        //得到指示器红点的位置
+                        int i = layoutManager.findFirstVisibleItemPosition() % data.size();
+                        bannerIndicator.setPosition(i);
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * 刷新文章列表UI
+     */
+    public void setInformationRecycle(List<HomeInformationBean> data) {
+        if (data.isEmpty()) {
+            return;
+        }
         if (getActivity() != null) {
-            getActivity().runOnUiThread(()-> {
+            getActivity().runOnUiThread(() -> {
+                BindingAdapter<HomeInformationBean> adapter = new BindingAdapter<>(this.getActivity(), data, R.layout.recycler_home_item);
+                adapter.setOnItemClickListener((value) -> {
+                    Intent intent = new Intent();
+                    intent.putExtra("url", data.get(value).getLink());
+                    intent.setClass(Objects.requireNonNull(this.getActivity()), HomeWebActivity.class);
+                    this.getActivity().startActivity(intent);
+                });
                 binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
                 binding.recycler.setAdapter(adapter);
-
             });
         }
     }
 
-    private void initView() {
-
+    public void refreshInformationData() {
+        binding.refreshInformation.setOnRefreshListener(()->{
+            binding.refreshInformation.setRefreshing(false);
+        });
     }
 
-
-    //设置滚动速度的自定义LayoutManager
+    /**
+     * 设置滚动速度的自定义LayoutManager
+     */
     public static class SmoothLinearLayoutManager extends LinearLayoutManager {
 
         public SmoothLinearLayoutManager(Context context) {
