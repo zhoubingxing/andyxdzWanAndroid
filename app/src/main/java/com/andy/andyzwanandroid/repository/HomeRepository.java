@@ -26,17 +26,20 @@ import java.util.List;
 
 public class HomeRepository {
 
-    static public LiveData<List<HomeInformationBean>> getHomeInformationData() {
+     public LiveData<List<HomeInformationBean>> getHomeInformationData() {
         return WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().getInformationData();
     }
 
-    static public LiveData<List<HomeBannerBean>> getHomeBannerData() {
+     public LiveData<List<HomeBannerBean>> getHomeBannerData() {
         return WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().getBannerData();
     }
 
-    //获取首页文章列表
-    static public void loadHomeInformationData() {
-        HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest("https://www.wanandroid.com/article/list/0/json", new HttpParams(), new HttpCallBack() {
+    /**
+     * 获取主页文章
+     * @param curPage 请求的页码
+     */
+     public void loadHomeInformationData(int curPage) {
+        HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest(getRequestInformationUrl(curPage), new HttpParams(), new HttpCallBack() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(String response) {
@@ -90,7 +93,10 @@ public class HomeRepository {
         });
     }
 
-    static public void loadBannerData() {
+    /**
+     * 请求首页Banner数据
+     */
+     public void loadBannerData() {
         HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest("https://www.wanandroid.com/banner/json", new HttpParams(), new HttpCallBack() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -124,7 +130,7 @@ public class HomeRepository {
      * @param clazz
      * @return
      */
-    public static <T> ArrayList<T> jsonToArrayList(String json, Class<T> clazz)
+    public  <T> ArrayList<T> jsonToArrayList(String json, Class<T> clazz)
     {
         Type type = new TypeToken<ArrayList<JsonObject>>()
         {}.getType();
@@ -136,5 +142,9 @@ public class HomeRepository {
             arrayList.add(new Gson().fromJson(jsonObject, clazz));
         }
         return arrayList;
+    }
+
+    private String getRequestInformationUrl(int curPage) {
+        return "https://www.wanandroid.com/article/list/" + curPage + "/json";
     }
 }

@@ -1,5 +1,6 @@
 package com.andy.andyzwanandroid.fragment.home;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
@@ -26,7 +27,6 @@ import com.andy.andyzwanandroid.adapter.BannerAdapter;
 import com.andy.andyzwanandroid.adapter.BindingAdapter;
 import com.andy.andyzwanandroid.bean.HomeInformationBean;
 import com.andy.andyzwanandroid.databinding.FragmentHomeBinding;
-import com.andy.andyzwanandroid.repository.HomeRepository;
 import com.andy.andyzwanandroid.bean.HomeBannerBean;
 import com.andy.andyzwanandroid.fragment.widget.BannerIndicator;
 
@@ -48,13 +48,20 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
+    ScheduledExecutorService scheduledExecutorService;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         //初始化ViewModel
-        homeViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(HomeViewModel.class);
+        homeViewModel = new ViewModelProvider(HomeFragment.this).get(HomeViewModel.class);
         binding.setLifecycleOwner(getActivity());
         binding.setHomeTitleData(homeViewModel.getHomeViewData().getValue());
         initView();
@@ -64,15 +71,13 @@ public class HomeFragment extends Fragment {
 
     private void initView() {
         //监听首页文章数据变化
-        homeViewModel.getHomeInformationData().observe(getActivity(), this::setInformationRecycle);
-        //http请求首页文章数据
-        HomeRepository.loadHomeInformationData();
+        homeViewModel.getHomeInformationData().observe(getViewLifecycleOwner(), this::setInformationRecycle);
         //监听banner数据变化
-        homeViewModel.getHomeBannerData().observe(getActivity(),this::setBanner);
-        //http请求banner数据
-        HomeRepository.loadBannerData();
+        homeViewModel.getHomeBannerData().observe(getViewLifecycleOwner(),this::setBanner);
         //下拉刷新
         refreshInformationData();
+        //同步服务器数据
+        homeViewModel.getServiceData();
     }
 
     /**
@@ -93,7 +98,7 @@ public class HomeFragment extends Fragment {
         });
 
         //切换到UI线程
-        getActivity().runOnUiThread(() -> {
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
             binding.homeBanner.setLayoutManager(layoutManager);
             binding.homeBanner.setAdapter(bindingAdapter);
             //自动居中
@@ -101,8 +106,6 @@ public class HomeFragment extends Fragment {
             LinearSnapHelper snapHelper = new LinearSnapHelper();
             snapHelper.attachToRecyclerView(binding.homeBanner);
 
-            //定时任务
-            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
             scheduledExecutorService.scheduleAtFixedRate(()
                     -> binding.homeBanner.smoothScrollToPosition(layoutManager.findFirstVisibleItemPosition() + 1), 2000, 5000, TimeUnit.MILLISECONDS);
 
@@ -145,7 +148,8 @@ public class HomeFragment extends Fragment {
     }
 
     public void refreshInformationData() {
-        binding.refreshInformation.setOnRefreshListener(()->{
+        binding.refreshInformation.setOnRefreshListener(()-> {
+            homeViewModel.refreshHomeInformation();
             binding.refreshInformation.setRefreshing(false);
         });
     }
@@ -177,4 +181,15 @@ public class HomeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        homeViewModel.getHomeBannerData().removeObservers(getViewLifecycleOwner());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        scheduledExecutorService.shutdownNow();
+    }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.andy.andyzwanandroid.bean.HomeBannerBean;
@@ -18,10 +19,10 @@ public interface HomeInformationDao {
     @Query("SELECT * FROM t_home_information_data")
     LiveData<List<HomeInformationBean>> getInformationData();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertInformationData(List<HomeInformationBean> data);
 
-    @Query("DELETE  FROM t_home_information_data where curPage=:curPage")
+    @Query("DELETE  FROM t_home_information_data WHERE curPage=:curPage")
     void deleteInformationData(int curPage);
 
     @Query("SELECT * FROM t_home_banner_data")
