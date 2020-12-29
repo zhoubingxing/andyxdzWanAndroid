@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -132,6 +134,7 @@ public class HomeFragment extends Fragment {
         if (data.isEmpty()) {
             return;
         }
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 BindingAdapter<HomeInformationBean> adapter = new BindingAdapter<>(this.getActivity(), data, R.layout.recycler_home_item);
@@ -141,8 +144,27 @@ public class HomeFragment extends Fragment {
                     intent.setClass(Objects.requireNonNull(this.getActivity()), HomeWebActivity.class);
                     this.getActivity().startActivity(intent);
                 });
-                binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+                binding.recycler.setLayoutManager(linearLayout);
                 binding.recycler.setAdapter(adapter);
+
+                // 实现上拉加载重要步骤，设置滑动监听器，RecyclerView自带的ScrollListener
+                binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        // 在newState为滑到底部时
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                            if (layoutManager instanceof LinearLayoutManager) {
+                                LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                                // 如果没有隐藏footView，那么最后一个条目的位置就比我们的getItemCount少1
+                                if (linearManager.findLastVisibleItemPosition() + 1 == adapter.getItemCount()) {
+                                homeViewModel.getMoreHomeInformation();
+                                }
+                            }
+                        }
+                    }
+                });
             });
         }
     }

@@ -25,6 +25,9 @@ public interface HomeInformationDao {
     @Query("DELETE  FROM t_home_information_data WHERE curPage=:curPage")
     void deleteInformationData(int curPage);
 
+    @Query("DELETE  FROM t_home_information_data")
+    void deleteAllInformationData();
+
     @Query("SELECT * FROM t_home_banner_data")
     LiveData<List<HomeBannerBean>> getBannerData();
 

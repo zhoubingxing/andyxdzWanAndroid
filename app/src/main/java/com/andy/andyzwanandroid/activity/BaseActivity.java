@@ -31,7 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             StatusBarUtil.setStatusBarColor(this, R.color.black);//黑色背景
         }
         initView();
-        Log.d("Activity生命周期", this.getLocalClassName() + "---------> onCreate");
+        Log.d("Activity生命周期", this.getLocalClassName() + "-------``--> onCreate");
     }
 
     @Override

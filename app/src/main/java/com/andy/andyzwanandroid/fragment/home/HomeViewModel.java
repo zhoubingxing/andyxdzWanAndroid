@@ -44,14 +44,24 @@ public class HomeViewModel extends ViewModel {
         //http请求banner数据
         homeRepository.loadBannerData();
         //http请求首页文章数据
-        homeRepository.loadHomeInformationData(currentPage);
+        homeRepository.loadHomeInformationData(0);
     }
 
     /**
-     * 点击刷新按钮,刷新page为0的数据
+     * 刷新第一页的数据：下拉刷新
      */
     public void refreshHomeInformation() {
+        new Thread(()->{
+            homeRepository.deleteAllInformationData();
+        }).start();
         homeRepository.loadHomeInformationData(0);
+    }
+
+    /**
+     * 刷新下一页的数据：上拉加载
+     */
+    public void getMoreHomeInformation() {
+        homeRepository.loadHomeInformationData(++currentPage);
     }
 
     public MutableLiveData<HomeTitleData> getHomeViewData() {

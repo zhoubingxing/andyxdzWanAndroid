@@ -26,24 +26,31 @@ import java.util.List;
 
 public class HomeRepository {
 
-     public LiveData<List<HomeInformationBean>> getHomeInformationData() {
+    /**
+     * @return DB主页文章数据
+     */
+    public LiveData<List<HomeInformationBean>> getHomeInformationData() {
         return WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().getInformationData();
     }
 
-     public LiveData<List<HomeBannerBean>> getHomeBannerData() {
-        return WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().getBannerData();
+    /**
+     * 删除整个information表数据
+     */
+    public void deleteAllInformationData() {
+        WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().deleteAllInformationData();
     }
 
+
     /**
-     * 获取主页文章
+     * 获取主页文章,获得数据后删除当前该页的数据
      * @param curPage 请求的页码
      */
-     public void loadHomeInformationData(int curPage) {
+    public void loadHomeInformationData(int curPage) {
         HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest(getRequestInformationUrl(curPage), new HttpParams(), new HttpCallBack() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(String response) {
-                try{
+                try {
                     JSONObject obj = new JSONObject(response);
                     String dataJson = obj.getJSONObject("data").getString("datas");
                     int curPage = obj.getJSONObject("data").getInt("curPage");
@@ -53,21 +60,21 @@ public class HomeRepository {
                     for (HomeInformationBean homeInformationBean : informationObjArray) {
                         homeInformationBean.setCurPage(curPage);
                     }
-                    for (int i = 0; i < informationObjArray.size() ; i++) {
+                    for (int i = 0; i < informationObjArray.size(); i++) {
                         switch (i % 5) {
-                            case 0 :
+                            case 0:
                                 informationObjArray.get(i).setLayoutId(R.drawable.recycler_image1);
                                 break;
-                            case 1 :
+                            case 1:
                                 informationObjArray.get(i).setLayoutId(R.drawable.recycler_image2);
                                 break;
-                            case 2 :
+                            case 2:
                                 informationObjArray.get(i).setLayoutId(R.drawable.recycler_image3);
                                 break;
-                            case 3 :
+                            case 3:
                                 informationObjArray.get(i).setLayoutId(R.drawable.recycler_image4);
                                 break;
-                            case 4 :
+                            case 4:
                                 informationObjArray.get(i).setLayoutId(R.drawable.recycler_image5);
                                 break;
                         }
@@ -76,51 +83,58 @@ public class HomeRepository {
                             .homeInformationDao().deleteInformationData(curPage);
                     WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance())
                             .homeInformationDao().insertInformationData(informationObjArray);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure() {
-                Log.d("OKhttp","onFailure");
+                Log.d("OKhttp", "onFailure");
             }
 
             @Override
             public void onSocketTimeout() {
-                Log.d("OKhttp","onSocketTimeout");
+                Log.d("OKhttp", "onSocketTimeout");
             }
         });
     }
 
     /**
+     * @return DBBanner数据
+     */
+    public LiveData<List<HomeBannerBean>> getHomeBannerData() {
+        return WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance()).homeInformationDao().getBannerData();
+    }
+
+    /**
      * 请求首页Banner数据
      */
-     public void loadBannerData() {
+    public void loadBannerData() {
         HttpManager.getInstance(WanAndroidApplication.getInstance()).getHttpRequest("https://www.wanandroid.com/banner/json", new HttpParams(), new HttpCallBack() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(String response) {
-                try{
+                try {
                     JSONObject obj = new JSONObject(response);
                     String dataJson = obj.getString("data");
                     ArrayList<HomeBannerBean> bannerObjArray = new ArrayList<>();
                     bannerObjArray = jsonToArrayList(dataJson, HomeBannerBean.class);
                     WanAndroidDataBase.getDatabase(WanAndroidApplication.getInstance())
                             .homeInformationDao().insertBannerData(bannerObjArray);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure() {
-                Log.d("OKhttp","onFailure");
+                Log.d("OKhttp", "onFailure");
             }
 
             @Override
             public void onSocketTimeout() {
-                Log.d("OKhttp","onSocketTimeout");
+                Log.d("OKhttp", "onSocketTimeout");
             }
         });
     }
@@ -130,15 +144,13 @@ public class HomeRepository {
      * @param clazz
      * @return
      */
-    public  <T> ArrayList<T> jsonToArrayList(String json, Class<T> clazz)
-    {
-        Type type = new TypeToken<ArrayList<JsonObject>>()
-        {}.getType();
+    public <T> ArrayList<T> jsonToArrayList(String json, Class<T> clazz) {
+        Type type = new TypeToken<ArrayList<JsonObject>>() {
+        }.getType();
         ArrayList<JsonObject> jsonObjects = new Gson().fromJson(json, type);
 
         ArrayList<T> arrayList = new ArrayList<>();
-        for (JsonObject jsonObject : jsonObjects)
-        {
+        for (JsonObject jsonObject : jsonObjects) {
             arrayList.add(new Gson().fromJson(jsonObject, clazz));
         }
         return arrayList;
